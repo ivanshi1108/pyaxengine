@@ -14,12 +14,18 @@ axclrt_provider_name = 'AXCLRTExecutionProvider'
 _axengine_lib_name = 'ax_engine'
 _axclrt_lib_name = 'axcl_rt'
 
+
 # check if axcl_rt is installed, so if available, it's the default provider
-if cutil.find_library(_axclrt_lib_name) is not None:
+import os
+
+def _lib_exists(lib_name, fallback_path):
+    return cutil.find_library(lib_name) is not None or os.path.exists(fallback_path)
+
+if _lib_exists(_axclrt_lib_name, '/opt/lib/libaxcl_rt.so'):
     providers.append(axclrt_provider_name)
 
 # check if ax_engine is installed
-if cutil.find_library(_axengine_lib_name) is not None:
+if _lib_exists(_axengine_lib_name, '/opt/lib/libax_engine.so'):
     providers.append(axengine_provider_name)
 
 

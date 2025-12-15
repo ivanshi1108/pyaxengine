@@ -37,11 +37,15 @@ sys_cffi.cdef(
 """
 )
 
+
+import os
 sys_name = "ax_sys"
-sys_path = ctypes.util.find_library(sys_name)
-assert (
-    sys_path is not None
-), f"Failed to find library {sys_name}. Please ensure it is installed and in the library path."
+sys_default_path = "/opt/lib/libax_sys.so"
+sys_path = None
+if os.path.exists(sys_default_path):
+    sys_path = sys_default_path
+else:
+    raise FileNotFoundError(f"Failed to find library {sys_name}. Please ensure {sys_default_path} exists.")
 
 sys_lib = sys_cffi.dlopen(sys_path)
 assert sys_lib is not None, f"Failed to load library {sys_path}. Please ensure it is installed and in the library path."
@@ -314,10 +318,12 @@ engine_cffi.cdef(
 )
 
 engine_name = "ax_engine"
-engine_path = ctypes.util.find_library(engine_name)
-assert (
-    engine_path is not None
-), f"Failed to find library {engine_name}. Please ensure it is installed and in the library path."
+engine_default_path = "/opt/lib/libax_engine.so"
+engine_path = None
+if os.path.exists(engine_default_path):
+    engine_path = engine_default_path
+else:
+    raise FileNotFoundError(f"Failed to find library {engine_name}. Please ensure {engine_default_path} exists.")
 
 engine_lib = engine_cffi.dlopen(engine_path)
 assert engine_lib is not None, f"Failed to load library {engine_path}. Please ensure it is installed and in the library path."

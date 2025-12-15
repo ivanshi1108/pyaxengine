@@ -188,11 +188,14 @@ axclrt_cffi.cdef(
 """
 )
 
+import os
 rt_name = "axcl_rt"
-rt_path = ctypes.util.find_library(rt_name)
-assert (
-        rt_path is not None
-), f"Failed to find library {rt_name}. Please ensure it is installed and in the library path."
+rt_default_path = "/opt/lib/libaxcl_rt.so"
+rt_path = None
+if os.path.exists(rt_default_path):
+    rt_path = rt_default_path
+else:
+    raise FileNotFoundError(f"Failed to find library {rt_name}. Please ensure {rt_default_path} exists.")
 
 axclrt_lib = axclrt_cffi.dlopen(rt_path)
 assert axclrt_lib is not None, f"Failed to load library {rt_path}. Please ensure it is installed and in the library path."
